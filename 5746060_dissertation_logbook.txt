@@ -1,0 +1,571 @@
+
+==============================================================================
+STEP 1 — LOADING RAW DATA
+==============================================================================
+Raw responses loaded: 127
+Columns in export:    46
+
+==============================================================================
+STEP 2 — SCREENING CASCADE
+==============================================================================
+  Raw responses                              127
+  Consented (Q1)                             124
+  UK resident (Q2)                           114
+  Held subscription in 24 months (Q4)        108
+
+==============================================================================
+STEP 3 — RECOVERING EXPERIMENTAL CONDITION
+==============================================================================
+  Reached the experimental manipulation: 97
+  Abandoned before manipulation:         11
+
+  Arm sizes:
+   cond_int
+   control        30
+   discount       38
+   flexibility    29
+
+==============================================================================
+STEP 4 — RECODING SCALES
+==============================================================================
+  Recoded 11 Likert items and 7 numeric items.
+
+==============================================================================
+STEP 5 — BUILDING COMPOSITE SCALES
+==============================================================================
+  Created: TRUST, EXPL, PFAIR, CARE, STAY + renamed outcomes.
+
+==============================================================================
+STEP 6 — DATA QUALITY
+==============================================================================
+  Analysis sample N = 97
+
+  Failed attention check (Q27_4)        12  (12%)
+  Failed comprehension (Q12)            10  (10%)
+  Failed recall (Q34)                   13  (13%)
+  Passed all three                      74  (76%)
+
+  RECONSTRUCTION VALIDITY: Q34 agrees with inferred condition in 84/97 cases (87%)
+
+  Testing whether speed predicts inattention (fast = under 120 seconds):
+    Fast respondents: n = 5 of 97
+    attention      fast fail= 60%  slow fail= 10%   chi2=6.886 p=0.0087  Fisher p=0.0129  (min expected cell=0.62)
+    comprehension  fast fail= 40%  slow fail=  9%   chi2=2.211 p=0.1371  Fisher p=0.0813  (min expected cell=0.52)
+    recall         fast fail= 40%  slow fail= 12%   chi2=1.251 p=0.2633  Fisher p=0.1317  (min expected cell=0.67)
+    -> Fast respondents fail MORE often on 3 of 3 checks, but the fast
+       group is very small (n = 5), so this is fragile evidence.
+       No duration filter is applied: the three direct attention measures are
+       preferred, and the clean-subsample robustness check (Step 18) already
+       excludes respondents who failed them.
+
+==============================================================================
+STEP 7 — SCALE RELIABILITY (Cronbach's alpha)
+==============================================================================
+  Trust           (Q27_1,2,3)          alpha = 0.848   good
+  EXPLOITATION    (Q29_2,Q30_1,Q30_2)  alpha = 0.880   very good  <-- respecified
+  Price fairness  (Q29_1,Q29_3,Q29_4)  alpha = 0.753   acceptable <-- respecified
+  [AS DESIGNED: fairness 4-item        alpha = 0.670]   barely passing
+
+  Item-total correlations within the AS-DESIGNED fairness scale:
+    Q29_1_n    r = +0.549
+    Q29_3_n    r = +0.474
+    Q29_4_n    r = +0.599
+    Q29_2R     r = +0.240  <-- MISFIT
+
+==============================================================================
+STEP 8 — BLOCK 11: CORRELATION STRUCTURE
+==============================================================================
+          FAIR1  OVERPAY  FAIR3  FAIR4  PRESSURE  MANIP  CARE
+FAIR1      1.00    -0.32   0.39   0.49     -0.29  -0.36  0.35
+OVERPAY   -0.32     1.00  -0.06  -0.19      0.64   0.59 -0.23
+FAIR3      0.39    -0.06   1.00   0.65     -0.14  -0.23  0.14
+FAIR4      0.49    -0.19   0.65   1.00     -0.37  -0.45  0.29
+PRESSURE  -0.29     0.64  -0.14  -0.37      1.00   0.89 -0.39
+MANIP     -0.36     0.59  -0.23  -0.45      0.89   1.00 -0.38
+CARE       0.35    -0.23   0.14   0.29     -0.39  -0.38  1.00
+
+  KEY READING - the overpayment item vs everything else:
+    OVERPAY vs PRESSURE (manipulation item)     r = +0.639
+    OVERPAY vs MANIP (manipulation item)        r = +0.595
+    OVERPAY vs FAIR1 (fairness item)            r = -0.322
+    OVERPAY vs FAIR3 (fairness item)            r = -0.061
+    OVERPAY vs FAIR4 (fairness item)            r = -0.188
+    -> Strong POSITIVE with manipulation items, weak with fairness items.
+
+  PCA eigenvalues: [3.322 1.446 0.811 0.635 0.4   0.287 0.098]
+  Components with eigenvalue > 1: 2
+  Variance explained by first 3:  79.7%
+
+==============================================================================
+STEP 9 — RANDOMISATION AND BALANCE CHECKS
+==============================================================================
+  Arm sizes [np.int64(30), np.int64(38), np.int64(29)] vs uniform: chi2=1.505, p=0.4712  (balanced)
+
+  Value x Intervention independence:
+   cond_int  control  discount  flexibility
+   cond_val                                
+   high           14        24           11
+   low            10        12           16
+
+   chi2(2) = 4.270, p = 0.1182  -> INDEPENDENT (randomisation OK)
+
+  Baseline covariate balance (want p > .05):
+    Age                        chi2= 6.612 df=8 p=0.5790  OK
+    Gender                     chi2= 1.936 df=2 p=0.3798  OK
+    Own subscription count     chi2= 7.738 df=8 p=0.4595  OK
+    Own monthly spend          chi2=10.135 df=8 p=0.2557  OK
+    Prior save offer received  chi2=21.179 df=8 p=0.0067  IMBALANCED
+
+==============================================================================
+STEP 10 — GENDER SENSITIVITY ANALYSIS
+==============================================================================
+  EXPL   gender main p=0.3771 | interactions p=0.356/0.734 | discount effect adjusted b=+1.629 p=0.0000
+  PFAIR  gender main p=0.4858 | interactions p=0.888/0.151 | discount effect adjusted b=-0.506 p=0.0099
+  CARE   gender main p=0.3671 | interactions p=0.009/0.912 | discount effect adjusted b=-1.350 p=0.0000
+  TRUST  gender main p=0.8403 | interactions p=0.919/0.161 | discount effect adjusted b=-0.488 p=0.0346
+  NPS    gender main p=0.0526 | interactions p=0.378/0.102 | discount effect adjusted b=-0.252 p=0.3353
+  -> No main effects, no interactions, conclusions unchanged: imbalance is not a confound.
+
+==============================================================================
+STEP 11 — MANIPULATION CHECKS
+==============================================================================
+  EASE OF CANCELLATION (want NO difference):
+    control=5.57  discount=5.55  flexibility=5.69
+    F=0.209, p=0.8117  -> PASS: compliance confirmed
+
+  OFFER VALUE (want discount ~ flexibility):
+    discount=4.71  flexibility=4.93
+    t=-0.913, p=0.3651  -> PASS: economically equivalent
+
+  VALUE MANIPULATION (want a difference):
+    high=5.14 (n=49)  low=4.74 (n=38)
+    t=1.431, p=0.1571, d=0.319  -> FAIL - see note
+    NOTE: this check FAILED. Reading about being a long-tenured customer did
+          not make people FEEL valuable. Moderation is therefore tested on
+          MEASURED perceived value (Q31_1), making it quasi-experimental.
+
+  RECALL ACCURACY by condition:
+    control      23/30 = 77%
+    discount     34/38 = 89%
+    flexibility  27/29 = 93%
+
+==============================================================================
+STEP 12 — TREATMENT EFFECTS
+==============================================================================
+
+Behavioural stay (proportion)
+   control      M= 0.00  SD= 0.00  Mdn= 0.0  n=27
+   discount     M= 0.37  SD= 0.49  Mdn= 0.0  n=35
+   flexibility  M= 0.17  SD= 0.38  Mdn= 0.0  n=29
+   ANOVA: F= 7.614, p=0.0009, eta2=0.1475   |   Kruskal-Wallis: H=13.277, p=0.0013
+     discount    vs control    : t= 4.482  p=0.0001  g=+0.994
+     flexibility vs control    : t= 2.415  p=0.0225  g=+0.614
+     discount    vs flexibility: t= 1.820  p=0.0737  g=+0.441
+
+Exploitation inference (1-7)
+   control      M= 3.29  SD= 1.11  Mdn= 3.0  n=30
+   discount     M= 4.89  SD= 0.99  Mdn= 5.0  n=38
+   flexibility  M= 4.60  SD= 1.06  Mdn= 4.7  n=29
+   ANOVA: F=21.125, p=0.0000, eta2=0.3101   |   Kruskal-Wallis: H=30.107, p=0.0000
+     discount    vs control    : t= 6.184  p=0.0000  g=+1.514
+     flexibility vs control    : t= 4.643  p=0.0000  g=+1.192
+     discount    vs flexibility: t= 1.139  p=0.2594  g=+0.280
+
+Price fairness (1-7)
+   control      M= 4.37  SD= 0.88  Mdn= 4.5  n=30
+   discount     M= 3.84  SD= 0.66  Mdn= 3.7  n=38
+   flexibility  M= 3.69  SD= 0.81  Mdn= 3.7  n=29
+   ANOVA: F= 6.310, p=0.0027, eta2=0.1184   |   Kruskal-Wallis: H=14.064, p=0.0009
+     discount    vs control    : t=-2.722  p=0.0088  g=-0.679
+     flexibility vs control    : t=-3.088  p=0.0031  g=-0.792
+     discount    vs flexibility: t= 0.828  p=0.4115  g=+0.207
+
+Perceived care (1-7)
+   control      M= 4.87  SD= 0.94  Mdn= 5.0  n=30
+   discount     M= 3.55  SD= 1.18  Mdn= 3.0  n=38
+   flexibility  M= 3.14  SD= 1.30  Mdn= 3.0  n=29
+   ANOVA: F=18.546, p=0.0000, eta2=0.2829   |   Kruskal-Wallis: H=28.951, p=0.0000
+     discount    vs control    : t=-5.122  p=0.0000  g=-1.204
+     flexibility vs control    : t=-5.837  p=0.0000  g=-1.508
+     discount    vs flexibility: t= 1.346  p=0.1838  g=+0.332
+
+Brand trust (1-7)
+   control      M= 4.74  SD= 0.84  Mdn= 4.7  n=30
+   discount     M= 4.26  SD= 0.90  Mdn= 4.0  n=38
+   flexibility  M= 3.90  SD= 1.01  Mdn= 4.0  n=29
+   ANOVA: F= 6.356, p=0.0026, eta2=0.1191   |   Kruskal-Wallis: H=12.234, p=0.0022
+     discount    vs control    : t=-2.272  p=0.0265  g=-0.544
+     flexibility vs control    : t=-3.491  p=0.0010  g=-0.900
+     discount    vs flexibility: t= 1.542  p=0.1287  g=+0.382
+
+NPS (0-10)
+   control      M= 6.23  SD= 1.17  Mdn= 6.0  n=30
+   discount     M= 6.05  SD= 1.06  Mdn= 6.0  n=38
+   flexibility  M= 6.90  SD= 0.98  Mdn= 7.0  n=29
+   ANOVA: F= 5.407, p=0.0060, eta2=0.1032   |   Kruskal-Wallis: H=11.402, p=0.0033
+     discount    vs control    : t=-0.660  p=0.5120  g=-0.161
+     flexibility vs control    : t= 2.373  p=0.0211  g=+0.608
+     discount    vs flexibility: t=-3.371  p=0.0013  g=-0.812
+
+Resubscription intention (1-7)
+   control      M= 4.53  SD= 0.90  Mdn= 4.0  n=30
+   discount     M= 4.82  SD= 0.77  Mdn= 5.0  n=38
+   flexibility  M= 5.14  SD= 0.92  Mdn= 5.0  n=29
+   ANOVA: F= 3.695, p=0.0285, eta2=0.0729   |   Kruskal-Wallis: H=10.673, p=0.0048
+     discount    vs control    : t= 1.371  p=0.1756  g=+0.338
+     flexibility vs control    : t= 2.558  p=0.0132  g=+0.658
+     discount    vs flexibility: t=-1.530  p=0.1318  g=-0.382
+
+Retention likelihood (1-7)
+   control      M= 3.67  SD= 1.12  Mdn= 4.0  n=30
+   discount     M= 4.08  SD= 1.10  Mdn= 4.0  n=38
+   flexibility  M= 4.14  SD= 1.25  Mdn= 4.0  n=29
+   ANOVA: F= 1.516, p=0.2248, eta2=0.0313   |   Kruskal-Wallis: H=3.797, p=0.1498
+     discount    vs control    : t= 1.516  p=0.1347  g=+0.367
+     flexibility vs control    : t= 1.524  p=0.1332  g=+0.392
+     discount    vs flexibility: t=-0.202  p=0.8407  g=-0.050
+
+Cross-buy intention (1-7)
+   control      M= 4.37  SD= 1.35  Mdn= 4.5  n=30
+   discount     M= 4.34  SD= 1.15  Mdn= 4.0  n=38
+   flexibility  M= 4.17  SD= 1.36  Mdn= 4.0  n=29
+   ANOVA: F= 0.206, p=0.8144, eta2=0.0044   |   Kruskal-Wallis: H=0.650, p=0.7225
+     discount    vs control    : t=-0.080  p=0.9369  g=-0.020
+     flexibility vs control    : t=-0.549  p=0.5850  g=-0.141
+     discount    vs flexibility: t= 0.540  p=0.5914  g=+0.135
+
+------------------------------------------------------------------------------
+SUMMARY TABLE (sorted by significance)
+------------------------------------------------------------------------------
+Outcome                            Ctrl   Disc   Flex       F        p    eta2
+Exploitation inference (1-7)       3.29   4.89   4.60  21.125   0.0000   0.310
+Perceived care (1-7)               4.87   3.55   3.14  18.546   0.0000   0.283
+Behavioural stay (proportion)      0.00   0.37   0.17   7.614   0.0009   0.148
+Brand trust (1-7)                  4.74   4.26   3.90   6.356   0.0026   0.119
+Price fairness (1-7)               4.37   3.84   3.69   6.310   0.0027   0.118
+NPS (0-10)                         6.23   6.05   6.90   5.407   0.0060   0.103
+Resubscription intention (1-7)     4.53   4.82   5.14   3.695   0.0285   0.073
+Retention likelihood (1-7)         3.67   4.08   4.14   1.516   0.2248   0.031
+Cross-buy intention (1-7)          4.37   4.34   4.17   0.206   0.8144   0.004
+
+==============================================================================
+STEP 13 — PROFILE TEST (discriminant validity of EXPL vs PFAIR)
+==============================================================================
+                      sum_sq     df        F  PR(>F)
+C(cond)              37.5159    2.0  23.3748  0.0000
+C(measure)            0.0000    1.0   0.0000  1.0000
+C(cond):C(measure)    3.6168    2.0   2.2535  0.1079
+Residual            150.8673  188.0      NaN     NaN
+
+  The INTERACTION row is the one that matters. If p < .05, the two
+  constructs respond differently across conditions -> discriminant validity holds.
+  (EXPL peaks under discount; PFAIR troughs under flexibility.)
+
+==============================================================================
+STEP 14 — MEDIATION ANALYSIS (bootstrap, 3000 resamples)
+==============================================================================
+
+EXPL -> TRUST   (n=97)
+  a-path: discount=+1.597 (p=0.0000)   flexibility=+1.309 (p=0.0000)
+  b-path: -0.068 (p=0.4574)
+  total c: disc=-0.481  flex=-0.848   |   direct c': disc=-0.373  flex=-0.759
+  INDIRECT discount    = -0.108  95% CI [-0.670, +0.372]  ns
+  INDIRECT flexibility = -0.088  95% CI [-0.599, +0.255]  ns
+
+EXPL -> RESUB   (n=97)
+  a-path: discount=+1.597 (p=0.0000)   flexibility=+1.309 (p=0.0000)
+  b-path: -0.160 (p=0.0569)
+  total c: disc=+0.282  flex=+0.605   |   direct c': disc=+0.538  flex=+0.814
+  INDIRECT discount    = -0.256  95% CI [-0.600, +0.071]  ns
+  INDIRECT flexibility = -0.209  95% CI [-0.475, +0.063]  ns
+  >>> INCONSISTENT MEDIATION (suppression): the direct effect is LARGER than
+      the total effect because the indirect path runs the OPPOSITE way.
+      The observed total UNDERSTATES the positive channel.
+
+EXPL -> NPS   (n=97)
+  a-path: discount=+1.597 (p=0.0000)   flexibility=+1.309 (p=0.0000)
+  b-path: -0.282 (p=0.0070)
+  total c: disc=-0.181  flex=+0.663   |   direct c': disc=+0.269  flex=+1.032
+  INDIRECT discount    = -0.450  95% CI [-0.997, +0.047]  ns
+  INDIRECT flexibility = -0.369  95% CI [-0.743, +0.042]  ns
+  >>> INCONSISTENT MEDIATION (suppression): the direct effect is LARGER than
+      the total effect because the indirect path runs the OPPOSITE way.
+      The observed total UNDERSTATES the positive channel.
+
+EXPL -> CROSSBUY   (n=97)
+  a-path: discount=+1.597 (p=0.0000)   flexibility=+1.309 (p=0.0000)
+  b-path: +0.103 (p=0.4147)
+  total c: disc=-0.025  flex=-0.194   |   direct c': disc=-0.190  flex=-0.330
+  INDIRECT discount    = +0.165  95% CI [-0.309, +0.845]  ns
+  INDIRECT flexibility = +0.135  95% CI [-0.214, +0.767]  ns
+  >>> INCONSISTENT MEDIATION (suppression): the direct effect is LARGER than
+      the total effect because the indirect path runs the OPPOSITE way.
+      The observed total UNDERSTATES the positive channel.
+
+PFAIR -> TRUST   (n=97)
+  a-path: discount=-0.525 (p=0.0068)   flexibility=-0.677 (p=0.0012)
+  b-path: +0.579 (p=0.0000)
+  total c: disc=-0.481  flex=-0.848   |   direct c': disc=-0.178  flex=-0.456
+  INDIRECT discount    = -0.304  95% CI [-0.623, -0.062]  SIGNIFICANT
+  INDIRECT flexibility = -0.392  95% CI [-0.794, -0.101]  SIGNIFICANT
+
+PFAIR -> RESUB   (n=97)
+  a-path: discount=-0.525 (p=0.0068)   flexibility=-0.677 (p=0.0012)
+  b-path: -0.166 (p=0.1449)
+  total c: disc=+0.282  flex=+0.605   |   direct c': disc=+0.195  flex=+0.492
+  INDIRECT discount    = +0.087  95% CI [-0.070, +0.273]  ns
+  INDIRECT flexibility = +0.112  95% CI [-0.083, +0.365]  ns
+
+PFAIR -> NPS   (n=97)
+  a-path: discount=-0.525 (p=0.0068)   flexibility=-0.677 (p=0.0012)
+  b-path: +0.238 (p=0.0948)
+  total c: disc=-0.181  flex=+0.663   |   direct c': disc=-0.056  flex=+0.824
+  INDIRECT discount    = -0.125  95% CI [-0.403, +0.131]  ns
+  INDIRECT flexibility = -0.161  95% CI [-0.447, +0.203]  ns
+  >>> INCONSISTENT MEDIATION (suppression): the direct effect is LARGER than
+      the total effect because the indirect path runs the OPPOSITE way.
+      The observed total UNDERSTATES the positive channel.
+
+PFAIR -> CROSSBUY   (n=97)
+  a-path: discount=-0.525 (p=0.0068)   flexibility=-0.677 (p=0.0012)
+  b-path: -0.102 (p=0.5522)
+  total c: disc=-0.025  flex=-0.194   |   direct c': disc=-0.078  flex=-0.263
+  INDIRECT discount    = +0.053  95% CI [-0.159, +0.300]  ns
+  INDIRECT flexibility = +0.069  95% CI [-0.198, +0.399]  ns
+  >>> INCONSISTENT MEDIATION (suppression): the direct effect is LARGER than
+      the total effect because the indirect path runs the OPPOSITE way.
+      The observed total UNDERSTATES the positive channel.
+
+CARE -> TRUST   (n=97)
+  a-path: discount=-1.314 (p=0.0000)   flexibility=-1.729 (p=0.0000)
+  b-path: +0.114 (p=0.1663)
+  total c: disc=-0.481  flex=-0.848   |   direct c': disc=-0.331  flex=-0.650
+  INDIRECT discount    = -0.150  95% CI [-0.499, +0.155]  ns
+  INDIRECT flexibility = -0.197  95% CI [-0.718, +0.173]  ns
+
+CARE -> RESUB   (n=97)
+  a-path: discount=-1.314 (p=0.0000)   flexibility=-1.729 (p=0.0000)
+  b-path: +0.036 (p=0.6429)
+  total c: disc=+0.282  flex=+0.605   |   direct c': disc=+0.329  flex=+0.666
+  INDIRECT discount    = -0.047  95% CI [-0.244, +0.193]  ns
+  INDIRECT flexibility = -0.062  95% CI [-0.346, +0.250]  ns
+  >>> INCONSISTENT MEDIATION (suppression): the direct effect is LARGER than
+      the total effect because the indirect path runs the OPPOSITE way.
+      The observed total UNDERSTATES the positive channel.
+
+CARE -> NPS   (n=97)
+  a-path: discount=-1.314 (p=0.0000)   flexibility=-1.729 (p=0.0000)
+  b-path: +0.050 (p=0.6040)
+  total c: disc=-0.181  flex=+0.663   |   direct c': disc=-0.115  flex=+0.750
+  INDIRECT discount    = -0.066  95% CI [-0.375, +0.237]  ns
+  INDIRECT flexibility = -0.087  95% CI [-0.486, +0.292]  ns
+  >>> INCONSISTENT MEDIATION (suppression): the direct effect is LARGER than
+      the total effect because the indirect path runs the OPPOSITE way.
+      The observed total UNDERSTATES the positive channel.
+
+CARE -> CROSSBUY   (n=97)
+  a-path: discount=-1.314 (p=0.0000)   flexibility=-1.729 (p=0.0000)
+  b-path: -0.068 (p=0.5581)
+  total c: disc=-0.025  flex=-0.194   |   direct c': disc=-0.113  flex=-0.311
+  INDIRECT discount    = +0.089  95% CI [-0.218, +0.466]  ns
+  INDIRECT flexibility = +0.117  95% CI [-0.299, +0.586]  ns
+  >>> INCONSISTENT MEDIATION (suppression): the direct effect is LARGER than
+      the total effect because the indirect path runs the OPPOSITE way.
+      The observed total UNDERSTATES the positive channel.
+
+------------------------------------------------------------------------------
+SIGNIFICANT INDIRECT EFFECTS
+------------------------------------------------------------------------------
+  discount     PFAIR  -> TRUST      indirect=-0.304  95% CI [-0.623, -0.062]
+  flexibility  PFAIR  -> TRUST      indirect=-0.392  95% CI [-0.794, -0.101]
+
+  Total: 2 significant indirect paths
+
+==============================================================================
+STEP 15 — MODERATION ANALYSIS
+==============================================================================
+Moderator                         Outcome   Arm                 b        p
+Perceived customer value (Q31_1)  TRUST     flexibility    -0.657   0.0020 ***
+Own subscription count (Q5)       RESUB     discount       +0.350   0.0022 ***
+Perceived customer value (Q31_1)  PFAIR     flexibility    -0.423   0.0183 ***
+Own monthly spend (Q6)            RESUB     discount       +0.014   0.0363 ***
+Own monthly spend (Q6)            PFAIR     discount       -0.012   0.0397 ***
+Perceived customer value (Q31_1)  RESUB     discount       +0.309   0.0482 ***
+Perceived customer value (Q31_1)  PFAIR     discount       -0.275   0.0623 *
+Perceived customer value (Q31_1)  RESUB     flexibility    +0.350   0.0641 *
+Own monthly spend (Q6)            RESUB     flexibility    +0.011   0.0704 *
+Own subscription count (Q5)       PFAIR     discount       -0.185   0.0805 *
+Perceived customer value (Q31_1)  NPS       flexibility    -0.403   0.0895 *
+Own subscription count (Q5)       EXPL      flexibility    +0.186   0.1767
+
+  36 interaction tests run.
+  Significant at p<.05: 6  (chance alone predicts 1.8)
+  HONESTY NOTE: this ratio is suggestive, not confirmatory. Only the
+  pre-specified customer-value hypothesis is treated as a finding; the
+  remainder are labelled exploratory. (Garden of forking paths.)
+
+==============================================================================
+STEP 16 — JOHNSON-NEYMAN (flexibility x perceived value -> trust)
+==============================================================================
+  Model R2 = 0.209, F = 4.820, p = 0.00059, n = 97
+  Flexibility main effect: b = -0.702 (p = 0.0082)
+  Flexibility x value:     b = -0.657 (p = 0.0020)
+
+  SIMPLE SLOPES - effect of flexibility vs control at each perceived-value level:
+    perceived value = 1:  effect = +1.851  SE=0.880  t=+2.10  p=0.0382  [SIG] RAISES trust
+    perceived value = 2:  effect = +1.194  SE=0.685  t=+1.74  p=0.0848  
+    perceived value = 3:  effect = +0.537  SE=0.500  t=+1.07  p=0.2853  
+    perceived value = 4:  effect = -0.119  SE=0.340  t=-0.35  p=0.7261  
+    perceived value = 5:  effect = -0.776  SE=0.257  t=-3.02  p=0.0033  [SIG] LOWERS trust
+    perceived value = 6:  effect = -1.433  SE=0.320  t=-4.49  p=0.0000  [SIG] LOWERS trust
+    perceived value = 7:  effect = -2.090  SE=0.472  t=-4.42  p=0.0000  [SIG] LOWERS trust
+
+  JOHNSON-NEYMAN TRANSITION POINTS: 1.39 and 4.64 on the 1-7 scale
+    Below 1.39 -> flexibility SIGNIFICANTLY INCREASES trust
+    Between 1.39 and 4.64 -> no significant effect
+    Above 4.64 -> flexibility SIGNIFICANTLY DECREASES trust
+
+    68/97 = 70% of the sample sits above the upper threshold.
+    MANAGERIAL READING: the same offer builds trust with customers who feel
+    peripheral and erodes it among customers who feel valued.
+
+==============================================================================
+STEP 17 — MULTIPLICITY CORRECTION (Benjamini-Hochberg, q = .05)
+==============================================================================
+Rank  Outcome                                      p   BH threshold   Verdict
+1     Exploitation inference (1-7)          0.000000         0.0056   PASS
+2     Perceived care (1-7)                  0.000000         0.0111   PASS
+3     Behavioural stay (proportion)         0.000891         0.0167   PASS
+4     Brand trust (1-7)                     0.002576         0.0222   PASS
+5     Price fairness (1-7)                  0.002682         0.0278   PASS
+6     NPS (0-10)                            0.005986         0.0333   PASS
+7     Resubscription intention (1-7)        0.028525         0.0389   PASS
+8     Retention likelihood (1-7)            0.224815         0.0444   fail
+9     Cross-buy intention (1-7)             0.814400         0.0500   fail
+
+  7 of 9 survive FDR correction:
+    - Exploitation inference (1-7)
+    - Perceived care (1-7)
+    - Behavioural stay (proportion)
+    - Brand trust (1-7)
+    - Price fairness (1-7)
+    - NPS (0-10)
+    - Resubscription intention (1-7)
+
+==============================================================================
+STEP 18 — ROBUSTNESS CHECK
+==============================================================================
+  Full sample                n= 97  EXPL: F=21.125 p=0.0000  |  discount vs control p=0.0000
+  Passed attention check     n= 85  EXPL: F=28.797 p=0.0000  |  discount vs control p=0.0000
+  Passed all three checks    n= 74  EXPL: F=59.600 p=0.0000  |  discount vs control p=0.0000
+
+==============================================================================
+STEP 19 — NPS CATEGORIES
+==============================================================================
+  Counts:
+   nps_group    Detractor  Passive  Promoter
+   cond_int                                 
+   control             19       11         0
+   discount            29        8         1
+   flexibility         10       18         1
+
+  Row percentages:
+   nps_group    Detractor  Passive  Promoter
+   cond_int                                 
+   control           63.0     37.0       0.0
+   discount          76.0     21.0       3.0
+   flexibility       34.0     62.0       3.0
+
+  chi2(4) = 13.133, p = 0.0106
+
+==============================================================================
+STEP 20 — OPEN-TEXT THEMATIC ANALYSIS (Q36)
+==============================================================================
+  control       2/29 =    7% voiced exploitation/tactic themes
+  discount      7/37 =   19% voiced exploitation/tactic themes
+  flexibility   0/29 =    0% voiced exploitation/tactic themes
+
+  chi2(2) = 7.108, p = 0.0286
+  -> Qualitative evidence converges with the quantitative mediator result.
+
+==============================================================================
+STEP 20B — SUPPLEMENTARY ANALYSES CITED IN THE DISSERTATION
+==============================================================================
+
+20B.1  PRIOR SAVE-OFFER SENSITIVITY
+
+  Outcome     disc b unadj        p   disc b adj        p   flex b adj        p
+  EXPL              +1.597   0.0000       +1.615   0.0000       +1.218   0.0000
+  CARE              -1.314   0.0000       -1.321   0.0000       -1.757   0.0000
+  PFAIR             -0.525   0.0068       -0.508   0.0104       -0.687   0.0014
+  TRUST             -0.481   0.0343       -0.418   0.0680       -0.831   0.0010
+  STAY              +0.371   0.0002       +0.392   0.0002       +0.195   0.0623
+  NPS               -0.181   0.4916       -0.103   0.6955       +0.801   0.0056
+  RESUB             +0.282   0.1791       +0.324   0.1130       +0.757   0.0008
+
+  -> Conclusions are unchanged under adjustment. The one sensitivity worth
+     reporting is the discount-vs-control contrast on TRUST, which weakens.
+
+20B.2  BOTH INTERACTION TERMS: condition x perceived value -> TRUST
+
+  Model: n = 97, R2 = 0.209, F = 4.820, p = 0.00059
+
+  Discount main effect                 b = -0.607   p = 0.0098  <-- significant
+  Flexibility main effect              b = -0.702   p = 0.0082  <-- significant
+  Perceived value main effect          b = +0.161   p = 0.1369
+  Discount x value  (INTERACTION)      b = -0.097   p = 0.5734
+  Flexibility x value  (INTERACTION)   b = -0.657   p = 0.0020  <-- significant
+
+  -> Only the FLEXIBILITY interaction is significant: the discount's trust cost
+     is roughly uniform across the customer base, the flexibility offer's is not.
+
+20B.3  TRUST-NPS CORRELATION WITHIN EACH CONDITION
+
+  control      r = +0.59   (n = 30)
+  discount     r = +0.55   (n = 38)
+  flexibility  r = -0.16   (n = 29)
+
+  -> Trust and recommendation move together in the control and discount arms
+     but come apart under flexibility: whatever drives willingness to
+     recommend that offer, it is not trust.
+
+20B.4  CORRELATION MATRIX - COMPOSITE MEASURES (Appendix C)
+
+           EXPL  PFAIR  CARE  TRUST  RESUB   NPS  PERCVAL
+  EXPL     1.00  -0.38 -0.38  -0.21  -0.05 -0.20     0.13
+  PFAIR   -0.38   1.00  0.32   0.55  -0.22  0.10    -0.02
+  CARE    -0.38   0.32  1.00   0.29  -0.10 -0.04    -0.11
+  TRUST   -0.21   0.55  0.29   1.00   0.07  0.23    -0.12
+  RESUB   -0.05  -0.22 -0.10   0.07   1.00  0.34     0.38
+  NPS     -0.20   0.10 -0.04   0.23   0.34  1.00     0.37
+  PERCVAL  0.13  -0.02 -0.11  -0.12   0.38  0.37     1.00
+
+  -> Exploitation inference vs price fairness: r = -0.38
+     Related but distinct, which is what the respecification in Step 7 requires.
+
+==============================================================================
+STEP 21 — SAVING OUTPUT
+==============================================================================
+  cleaned_data.csv     - analysis dataset with all derived variables
+  analysis_output.txt  - full log of this run
+
+==============================================================================
+ANALYSIS COMPLETE
+==============================================================================
+  Analysis sample: N = 97
+  Arms: control=30, discount=38, flexibility=29
+
+  HEADLINE FINDINGS:
+   1. Exploitation inference: F = 21.13, p = 0.0000, eta2 = 0.310
+   2. Perceived care:         F = 18.55, p = 0.0000, eta2 = 0.283
+   3. Behavioural stay: control 0%, discount 37%, flexibility 17%
+   4. Significant indirect (mediation) effects: 2
+        discount PFAIR -> TRUST: -0.304 [-0.623, -0.062]
+        flexibility PFAIR -> TRUST: -0.392 [-0.794, -0.101]
+   5. Outcomes surviving Benjamini-Hochberg FDR correction: 7 of 9
+
+Log written to analysis_output.txt (565 lines)
+Saved to: /content/drive/MyDrive/cleaned_data.csv
+Saved to: /content/drive/MyDrive/analysis_output.txt
+Saved to: /content/drive/MyDrive/analysis_output.txt
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        

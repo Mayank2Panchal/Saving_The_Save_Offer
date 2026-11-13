@@ -15,7 +15,7 @@
 
 ## 📋 Table of Contents
 
-* [Project Overview](https://www.google.com/search?q=%23-project-overview)
+* [Project Overview](#-project-overview)
 * [Research Background & Context](https://www.google.com/search?q=%23-research-background--context)
 * [Experimental Design & Methodology](https://www.google.com/search?q=%23-experimental-design--methodology)
 * [Key Findings & Empirical Results](https://www.google.com/search?q=%23-key-findings--empirical-results)

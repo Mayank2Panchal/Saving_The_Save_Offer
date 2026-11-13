@@ -16,13 +16,13 @@
 ## 📋 Table of Contents
 
 * [Project Overview](#-project-overview)
-* [Research Background & Context](https://www.google.com/search?q=%23-research-background--context)
-* [Experimental Design & Methodology](https://www.google.com/search?q=%23-experimental-design--methodology)
-* [Key Findings & Empirical Results](https://www.google.com/search?q=%23-key-findings--empirical-results)
-* [Repository Structure](https://www.google.com/search?q=%23-repository-structure)
-* [Tech Stack & Analysis Pipeline](https://www.google.com/search?q=%23-tech-stack--analysis-pipeline)
-* [Managerial & Regulatory Implications](https://www.google.com/search?q=%23-managerial--regulatory-implications)
-* [Author & Academic Ethics](https://www.google.com/search?q=%23-author--academic-ethics)
+* [Research Background & Context](#-research-background--context)
+* [Experimental Design & Methodology](#-experimental-design--methodology)
+* [Key Findings & Empirical Results](#-key-findings--empirical-results)
+* [Repository Structure](#-repository-structure)
+* [Tech Stack & Analysis Pipeline](#-tech-stack--analysis-pipeline)
+* [Managerial & Regulatory Implications](#-managerial--regulatory-implications)
+* [Author & Academic Ethics](#-author--academic-ethics)
 
 ---
 
